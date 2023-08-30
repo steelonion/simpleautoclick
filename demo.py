@@ -1,11 +1,10 @@
 import simple_record
 import time
 
-recorder= simple_record.MouseRecorder(10)
+recorder= simple_record.MouseRecorder('q')
 recorder.start()
 time.sleep(5)
 recorder.stop()
-print(recorder.position_list)
 save= simple_record.RecorderSave()
 recorder.export(save)
 save.write("233")
