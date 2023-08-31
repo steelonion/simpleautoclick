@@ -13,6 +13,8 @@ class EAction(IntEnum):
 class MouseRecorder:
     # 鼠标记录器
     def __init__(self, quit_key: str = 'q'):
+        self.record_interval=0.1
+        self.next_record_time=0
         self.running = False
         self.quit_key = quit_key
         self.position_list = []
@@ -25,6 +27,7 @@ class MouseRecorder:
 
     def start(self):
         self.running = True
+        self.next_record_time=0
         self.start_timestamp = time.time()
         self.keyboard_listener.start()
         self.mouse_listener.start()
@@ -51,8 +54,10 @@ class MouseRecorder:
     # 鼠标事件回调函数
     def on_mouse_move(self, x, y):
         timespan = time.time()-self.start_timestamp
-        self.position_list.append((timespan, EAction.mousemove, x, y))
-        print(f'鼠标移动到 ({x}, {y})')
+        if(timespan>self.next_record_time):
+            self.next_record_time=timespan+self.record_interval
+            self.position_list.append((timespan, EAction.mousemove, x, y))
+            print(f'鼠标移动到 ({x}, {y})')
 
     def on_mouse_click(self, x, y, button, pressed):
         action = '点击' if pressed else '释放'
